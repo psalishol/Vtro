@@ -13,7 +13,7 @@ import { Storage } from "aws-amplify";
 
 export default function SignUpForm() {
   const navigation = useNavigation();
-  const [s3ProfileImageKey, setS3ProfileImageKey] = useState<String>();
+  const [userProfileImageUri, setUserProfileImageUri] = useState<String>();
   const [loading, setLoading] = useState<boolean>(false);
   const onRegister = async (data: {
     email: string;
@@ -21,56 +21,53 @@ export default function SignUpForm() {
     name: string;
     profileImageUri: string;
     phoneNumber: string;
-    role: string;
+    title: string;
   }) => {
-    const { email, password, name, profileImageUri, phoneNumber, role } = data;
-    async function uploadProfilePicture() {
-      try {
-        const response = await fetch(profileImageUri);
-        const blob = await response.blob();
-        const result = await Storage.put(`${email}.jpg`, blob);
-        setS3ProfileImageKey(result.key);
-        console.log(s3ProfileImageKey);
-        console.log(result.key);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    setLoading(true);
-    try {
-      await uploadProfilePicture();
-      s3ProfileImageKey
-        ? await Auth.signUp({
-            username: email,
-            password,
-            attributes: {
-              name: name,
-              picture: s3ProfileImageKey,
-              phone_number: `+234${phoneNumber}`,
-              given_name: role,
-            },
-          }).then(() => {
-            console.log("Signed Up Successfully!! 🔥 🔥");
-            setLoading(false);
-            navigation.navigate<any>("ConfirmRegistrationScreen", { email });
-          })
-        : null;
-    } catch (error) {
-      setLoading(false);
-      if (error instanceof Error) {
-        console.log("There was an error signing up ==> 😢 😢");
-        const errorMessage = error.message;
-        console.log(errorMessage);
-      }
-    }
-    setLoading(false);
-  };
+    const { email, password, name, profileImageUri, phoneNumber, title } = data;
 
+    try {
+      setLoading(true);
+      const response = await fetch(profileImageUri);
+      const blob = await response.blob();
+      await Storage.put(`${email}_user_profile_image.jpg`, blob)
+        .then(async (response) => await Storage.get(response.key))
+        .then(
+          async (imageUri) =>
+            await Auth.signUp({
+              username: email,
+              password,
+              attributes: {
+                name: name,
+                picture: imageUri,
+                phone_number: `+234${phoneNumber}`,
+                given_name: title,
+              },
+            })
+        )
+        .finally(() => {
+          console.log("Signed Up Successfully!! 🔥 🔥");
+          setLoading(false);
+          console.log("User Data", {
+            ...data,
+            profileImageUri: userProfileImageUri,
+          });
+          navigation.navigate<any>("ConfirmRegistrationScreen", { email });
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.log("There an error signing up ==> 😢 😢");
+          const errorMessage = error.message;
+          console.log(errorMessage);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const initialValue = {
     name: "",
     email: "",
     title: "",
-    role: "",
+    // role: "",
     password: "",
     profileImageUri: "",
     phoneNumber: "",
