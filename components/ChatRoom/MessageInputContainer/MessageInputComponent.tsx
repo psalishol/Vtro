@@ -1,27 +1,35 @@
-
-
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import React, { useState } from "react";
 import { SimpleLineIcons, Feather, Ionicons } from "@expo/vector-icons";
+import { Auth, DataStore } from "aws-amplify";
+import { Message } from "../../../src/models";
 
-export default function ChatTextInput() {
+export default function ChatTextInput({ chatRoomId }: any) {
   const [message, setMessage] = useState("");
 
-  const onSendMessagedClicked = () => {
-    console.warn("Message sent: ", message);
-    setMessage("");
+  const onSendMessage = async (message: string) => {
+    const authUser = await Auth.currentAuthenticatedUser();
+    await DataStore.save(
+      new Message({
+        message,
+        userID: authUser.attributes.sub,
+        chatroomID: chatRoomId,
+      })
+    )
+      .finally(() => setMessage(""))
+      .catch((error) => console.log("Error in sending message", error));
   };
+
   const onPlusClicked = () => {
     console.warn("plus button clicked");
   };
   const onPressed = () => {
     if (message) {
-      onSendMessagedClicked();
+      onSendMessage(message);
     } else {
       onPlusClicked();
     }
   };
-
   return (
     <View style={styles.inputContainer}>
       <View style={styles.textInputContainer}>
