@@ -1,17 +1,24 @@
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MessageStyles } from "./MessageStyle";
+import { Message } from "../../../src/models";
 
-export default function Messages(props) {
-  const myMessage = props.chat.user.name === "Vadim";
+export default function Messages({
+  message,
+  recipientID,
+}: {
+  message: Message;
+  recipientID: string;
+}) {
+  const myMessage = message.userID !== recipientID;
   return (
     <View
       style={
         myMessage
-          ? props.chat.content.length < 50
+          ? message.message.length < 50
             ? MessageStyles.myMessageSmallTextContainer
             : MessageStyles.myMessageContainer
-          : props.chat.content.length < 50
+          : message.message.length < 50
           ? MessageStyles.receiverSmallTextContainer
           : MessageStyles.receiverMessageContainer
       }
@@ -23,7 +30,7 @@ export default function Messages(props) {
             : MessageStyles.receiverMessageText
         }
       >
-        {props.chat.content}
+        {message.message}
       </Text>
     </View>
   );
