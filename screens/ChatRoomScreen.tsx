@@ -64,7 +64,9 @@ export default function ChatRoomScreen() {
       if (msg.model === Message && msg.opType === "INSERT") {
         console.log(msg.model, msg.opType, msg.element);
         setChatRoomMessages((existingChatroomMessages) => {
-          const index = existingChatroomMessages.length - 1;
+          const index = existingChatroomMessages.findIndex(
+            (messages) => messages.id === msg.element.id
+          );
           existingChatroomMessages[index] = msg.element;
           return existingChatroomMessages;
         });
