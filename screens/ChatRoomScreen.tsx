@@ -6,8 +6,12 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import EmojiSelector from "react-native-emoji-selector";
 import ChatTextInput from "../components/ChatRoom/MessageInputContainer/MessageInputComponent";
 import Messages from "../components/ChatRoom/MessageContainer/MessageContainer";
 import chats from "../DummyData/Chats";
@@ -23,10 +27,14 @@ import { ChatRoomHeader } from "../components/ChatRoom/HeaderComponent/ChatRoomH
 export default function ChatRoomScreen() {
   const [chatRoomMessages, setChatRoomMessages] = useState<Message[]>([]);
   const [user, setUser] = useState<User>();
-
-  // console.log(chatRoomMessages);
+  const [isEmojiInputOpened, setIsEmojiInputOpened] = useState<boolean>(false);
+  const [message, setMessage] = useState("");
 
   const route = useRoute();
+
+  // console.log("Chat room messages ", chatRoomMessages);
+
+  isEmojiInputOpened ? Keyboard.dismiss() : null;
 
   const chatRoomID = route?.params?.id;
   const userId = route?.params?.userId;
@@ -55,10 +63,11 @@ export default function ChatRoomScreen() {
     const subscription = DataStore.observe(Message).subscribe((msg) => {
       if (msg.model === Message && msg.opType === "INSERT") {
         console.log(msg.model, msg.opType, msg.element);
-        setChatRoomMessages((existingChatroomMessages) => [
-          msg.element,
-          ...existingChatroomMessages,
-        ]);
+        setChatRoomMessages((existingChatroomMessages) => {
+          const index = existingChatroomMessages.length - 1;
+          existingChatroomMessages[index] = msg.element;
+          return existingChatroomMessages;
+        });
       }
     });
     return () => subscription.unsubscribe();
@@ -70,8 +79,9 @@ export default function ChatRoomScreen() {
   }
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" backgroundColor={"#3872E9"} />
+      <CustomStatusBar barStyle="dark-content" backgroundColor={colors.blue} />
       <SafeAreaView style={styles.page}>
+        {/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}> */}
         <ChatRoomHeader
           profileImageUri={recipientProfileImageUri}
           name={recipientName}
@@ -84,7 +94,28 @@ export default function ChatRoomScreen() {
           )}
           ListFooterComponent={() => <View style={{ height: 20 }}></View>}
         />
-        <ChatTextInput chatRoomId={chatRoomID} />
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={50}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <ChatTextInput
+            setChatRoomMessages={setChatRoomMessages}
+            chatRoomMessages={chatRoomMessages}
+            message={message}
+            setMessage={setMessage}
+            isEmojiInputOpened={isEmojiInputOpened}
+            setIsEmojiInputOpened={setIsEmojiInputOpened}
+            chatRoomId={chatRoomID}
+          />
+        </KeyboardAvoidingView>
+        {isEmojiInputOpened ? (
+          <View style={{ height: "37%" }}>
+            <EmojiSelector
+              columns={10}
+              onEmojiSelected={(emoji) => setMessage(message + emoji)}
+            />
+          </View>
+        ) : null}
       </SafeAreaView>
     </>
   );
