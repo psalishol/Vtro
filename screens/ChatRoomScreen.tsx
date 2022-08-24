@@ -10,7 +10,7 @@ import {
   Platform,
   Keyboard,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import EmojiSelector from "react-native-emoji-selector";
 import ChatTextInput from "../components/ChatRoom/MessageInputContainer/MessageInputComponent";
 import Messages from "../components/ChatRoom/MessageContainer/MessageContainer";
@@ -24,10 +24,12 @@ import { User } from "../src/models";
 // import { S3Image } from "aws-amplify-react-native";
 import { colors } from "../constants/Colors";
 import { ChatRoomHeader } from "../components/ChatRoom/HeaderComponent/ChatRoomHeader";
+import ImageMessageContainer from "../components/ChatRoom/MessageContainer/ImageMessageContainer";
 export default function ChatRoomScreen() {
   const [chatRoomMessages, setChatRoomMessages] = useState<Message[]>([]);
   const [user, setUser] = useState<User>();
   const [isEmojiInputOpened, setIsEmojiInputOpened] = useState<boolean>(false);
+  // const [hasNewMessage, setHasNewMessage] = useState()
   const [message, setMessage] = useState("");
 
   const route = useRoute();
@@ -41,6 +43,15 @@ export default function ChatRoomScreen() {
   const recipientName = route.params?.name;
   const recipientProfileImageUri = route.params?.profileImageUri;
 
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
   useEffect(() => {
     const fetchMessages = async () => {
       const messages = (
@@ -48,8 +59,8 @@ export default function ChatRoomScreen() {
           messages.chatroomID("eq", chatRoomID)
         )
       ).sort((a: Message, b: Message) => {
-        const firstMessageCreation = new Date(a.updatedAt).getTime();
-        const secondMessageCreation = new Date(b.updatedAt).getTime();
+        const firstMessageCreation = new Date(a.updatedAt!).getTime();
+        const secondMessageCreation = new Date(b.updatedAt!).getTime();
         if (firstMessageCreation < secondMessageCreation) return 1;
         if (firstMessageCreation > secondMessageCreation) return -1;
         return 0;
@@ -67,8 +78,8 @@ export default function ChatRoomScreen() {
           const index = existingChatroomMessages.findIndex(
             (messages) => messages.id === msg.element.id
           );
-          existingChatroomMessages[index] = msg.element;
-          return existingChatroomMessages;
+          existingChatroomMessages.splice(index, 1);
+          return [msg.element, ...existingChatroomMessages];
         });
       }
     });
@@ -91,9 +102,18 @@ export default function ChatRoomScreen() {
         <FlatList
           inverted
           data={chatRoomMessages}
-          renderItem={({ item }) => (
-            <Messages recipientID={userId} message={item} />
-          )}
+          renderItem={({ item }) =>
+            item.mediaIncluded ? (
+              <ImageMessageContainer
+                roomMounted={mounted.current}
+                key={item.id}
+                recipientId={userId}
+                message={item}
+              />
+            ) : (
+              <Messages key={item.id} recipientID={userId} message={item} />
+            )
+          }
           ListFooterComponent={() => <View style={{ height: 20 }}></View>}
         />
         <KeyboardAvoidingView
