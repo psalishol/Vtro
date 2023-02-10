@@ -5,6 +5,8 @@ Vtro is a real-time messaging app with secure end to end encryption
 
 ## Getting Started
 
+https://user-images.githubusercontent.com/85138073/217970598-f81b54ce-c21a-4896-8cd2-745e020b25c3.mp4
+
 To see the live demo of the app, you need to have expo go installed. 
 
 Dont have yet ? Get the app here:&nbsp;
@@ -28,7 +30,6 @@ Dont have yet ? Get the app here:&nbsp;
 
 
 
-https://user-images.githubusercontent.com/85138073/217968084-8a9e348a-cc12-4ec8-a84e-c8890a513666.mp4
 
 Technologies
 
@@ -45,3 +46,7 @@ If you are a developer and want to contribute to this project, you can find more
 Current Issue
 - [Issue 1] Slide to reply currently buggy
 - [Issue 2] Bug in the file sharing feature
+
+
+
+
