@@ -41,3 +41,7 @@ Technologies
 
 
 If you are a developer and want to contribute to this project, you can find more information on how to set up the development environment and how to submit pull requests in the GitHub repository.
+
+Current Issue
+- [Issue 1] Slide to reply currently buggy
+- [Issue 2] Bug in the file sharing feature
