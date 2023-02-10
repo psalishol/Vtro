@@ -14,9 +14,9 @@ Dont have yet ? Get the app here:&nbsp;
 
 Features
 
-Real-time messaging: The Chat Application provides real-time messaging between users, ensuring that messages are delivered instantly.
+- Real-time messaging: The Chat Application provides real-time messaging between users, ensuring that messages are delivered instantly.
 
-Group chat: Users can create groups and invite other users to participate in group chats.
+- Group chat: Users can create groups and invite other users to participate in group chats.
 
 File sharing: Users can share files with each other within the chat platform.
 
