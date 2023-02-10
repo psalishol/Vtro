@@ -12,17 +12,17 @@ Dont have yet ? Get the app here:&nbsp;
 <a href ="https://apps.apple.com/us/app/expo-go/id982107779" target="blank"><img align="center" src="https://logos-download.com/wp-content/uploads/2016/06/Available_on_the_App_Store_logo-700x207.png" width ="70"/></a>
 
 
-Features
+### Features
 
 - Real-time messaging: The Chat Application provides real-time messaging between users, ensuring that messages are delivered instantly.
 
 - Group chat: Users can create groups and invite other users to participate in group chats.
 
-File sharing: Users can share files with each other within the chat platform.
+- File sharing: Users can share files with each other within the chat platform.
 
-Notifications: Users receive notifications when they receive a new message or when someone mentions them in a group chat.
+- Notifications: Users receive notifications when they receive a new message or when someone mentions them in a group chat.
 
-Secure communication: The Chat Application uses industry-standard encryption to ensure that all communication is secure and protected from eavesdropping.
+- Secure communication: The Chat Application uses industry-standard encryption to ensure that all communication is secure and protected from eavesdropping.
 
-User profiles: Users can view and update their profile information, including their display name, profile picture, and status.
+- User profiles: Users can view and update their profile information, including their display name, profile picture, and status.
 
