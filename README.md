@@ -26,3 +26,18 @@ Dont have yet ? Get the app here:&nbsp;
 
 - User profiles: Users can view and update their profile information, including their display name, profile picture, and status.
 
+
+
+https://user-images.githubusercontent.com/85138073/217968084-8a9e348a-cc12-4ec8-a84e-c8890a513666.mp4
+
+Technologies
+
+- React Native
+
+- AWS
+
+- Expo
+
+
+
+If you are a developer and want to contribute to this project, you can find more information on how to set up the development environment and how to submit pull requests in the GitHub repository.
