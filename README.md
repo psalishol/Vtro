@@ -3,7 +3,7 @@ Chat and Management app
 
 Vtro is a real-time messaging app with secure end to end encryption 
 
-Getting Started
+## Getting Started
 
 To see the live demo of the app, you need to have expo go installed. 
 
